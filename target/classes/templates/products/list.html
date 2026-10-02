@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Products | Stockroom</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<main class="shell">
+    <header class="topbar">
+        <a class="wordmark" th:href="@{/products}">STOCKROOM<span> / INVENTORY</span></a>
+        <span class="topbar-note">PRODUCT MANAGEMENT</span>
+    </header>
+    <section class="page-heading">
+        <div>
+            <p class="eyebrow">CATALOG</p>
+            <h1>Products</h1>
+            <p class="subheading">Review and manage your inventory.</p>
+        </div>
+        <a class="button button-primary" th:href="@{/products/new}"><span aria-hidden="true">+</span> Add product</a>
+    </section>
+    <section class="table-section" aria-label="Product inventory">
+        <div class="table-meta">
+            <span>ALL PRODUCTS</span>
+            <span class="count" th:text="${products.size()}">0</span>
+        </div>
+        <div class="table-scroll" th:if="${!products.isEmpty()}">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">PRODUCT</th>
+                    <th scope="col">DESCRIPTION</th>
+                    <th scope="col">PRICE</th>
+                    <th scope="col"><span class="visually-hidden">Actions</span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product : ${products}">
+                    <td class="product-name" th:text="${product.name}">Product name</td>
+                    <td class="description" th:text="${#strings.isEmpty(product.description) ? 'No description' : product.description}">Product description</td>
+                    <td class="price">$<span th:text="${#numbers.formatDecimal(product.price, 1, 2)}">0.00</span></td>
+                    <td class="row-actions">
+                        <a class="text-action" th:href="@{/products/{id}/edit(id=${product.id})}">Edit</a>
+                        <form th:action="@{/products/{id}/delete(id=${product.id})}" method="post"
+                              onsubmit="return confirm('Delete this product?')">
+                            <button class="text-action text-danger" type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="empty-state" th:if="${products.isEmpty()}">
+            <p class="empty-title">No products yet</p>
+            <p>Your inventory is empty. Add a product to get started.</p>
+            <a class="text-action" th:href="@{/products/new}">Add your first product</a>
+        </div>
+    </section>
+</main>
+</body>
+</html>
